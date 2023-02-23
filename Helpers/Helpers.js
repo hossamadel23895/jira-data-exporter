@@ -1,7 +1,5 @@
 import { promises as promisesFs } from "fs";
-import fs from "fs";
 import path from "path";
-import * as Conf from "../Configurations.js";
 import * as Constants from "./Constants.js";
 
 import dayjs from "dayjs";
@@ -27,9 +25,9 @@ if (!("toJSON" in Error.prototype))
 export const dateStringJira = () => {
   let stampObj = dayjs().utc();
   let year = stampObj.$y;
-  let month = ("0" + (stampObj.$M + 1)).slice(-2);
-  let day = ("0" + stampObj.$D).slice(-2);
-  return `${day}/${month}/${year}`;
+  let month = stampObj.$M + 1;
+  let day = stampObj.$D;
+  return `${month}/${day}/${year}`;
 };
 
 export const sleep = (milliseconds) => {

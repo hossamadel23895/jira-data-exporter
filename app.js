@@ -17,7 +17,7 @@ dayjs.extend(utc);
       console.info("---------------------------------------------------------");
 
       for (const filter of Conf.Filters) {
-        Helpers.logMsg(`---------- File ${filter.File_Name} ----------`);
+        Helpers.logMsg(`---------- File "${filter.File_Name}" ----------`);
 
         Helpers.logMsg(`Getting data from jira for "${filter.File_Name}"...`);
 
@@ -35,6 +35,29 @@ dayjs.extend(utc);
         // Remove first "headers" and last "empty arr" elements after formatting
         filterDataArray.shift();
         filterDataArray.pop();
+
+        // Removing unneeded columns
+        filterDataArray = filterDataArray.map((dataRow) => {
+          if (filter.Columns_to_keep.includes("all")) {
+            return dataRow;
+          } else {
+            let filteredDataRow = dataRow.filter((dataCell, index) => {
+              return filter.Columns_to_keep.includes(index + 1);
+            });
+            return filteredDataRow;
+          }
+        });
+
+        // Converting numbers strings to numbers
+        filterDataArray = filterDataArray.map((dataRow) => {
+          let correctedDataRow = dataRow.map((dataCell) => {
+            if (!isNaN(dataCell) && !isNaN(parseFloat(dataCell))) {
+              dataCell = parseFloat(dataCell);
+            }
+            return dataCell;
+          });
+          return correctedDataRow;
+        });
 
         // Add Date String to each row
         filterDataArray.map((e) => e.unshift(Helpers.dateStringJira()));
