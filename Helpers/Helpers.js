@@ -23,7 +23,7 @@ if (!("toJSON" in Error.prototype))
   });
 
 export const dateStringJira = () => {
-  let stampObj = dayjs().utc();
+  let stampObj = dayjs().utc().subtract(1, "day");
   let year = stampObj.$y;
   let month = stampObj.$M + 1;
   let day = stampObj.$D;
