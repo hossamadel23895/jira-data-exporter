@@ -3,6 +3,10 @@ import * as Helpers from "./Helpers/Helpers.js";
 import * as Requests from "./Helpers/Requests.js";
 import * as Constants from "./Helpers/Constants.js";
 
+import util from "util";
+import * as child from "child_process";
+const exec = util.promisify(child.exec);
+
 import ExcelJS from "exceljs";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc.js";
@@ -85,6 +89,18 @@ dayjs.extend(utc);
         Helpers.logMsg(`----------------------------`);
       }
 
+      // Synchronizing drive
+      Helpers.logMsg(`Synchronizing Drive files...`);
+      // const synchronizeCommand = "onedrive --synchronize";
+      const synchronizeCommand = "cd /flfl";
+      const { stdout, stderr } = await exec(synchronizeCommand);
+      if (stderr) throw new Error(stderr);
+      console.log(stdout);
+
+      Helpers.logMsg(`Finished Synchronizing Drive files`);
+      Helpers.logMsg(`----------------------------`);
+
+	  // Before finishing
       Helpers.logMsg(
         `Finished getting all new data, Updating after ${Conf.refresh_time_in_hours} hours ...`
       );
