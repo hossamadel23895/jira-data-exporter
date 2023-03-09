@@ -16,18 +16,24 @@ dayjs.extend(utc);
     try {
       console.info("---------------------------------------------------------");
 
-      for (const filter of Conf.Filters) {
-        Helpers.logMsg(`---------- File "${filter.File_Name}" ----------`);
+      let filtersData = [];
 
+      for (const filter of Conf.Filters) {
         Helpers.logMsg(`Getting data from jira for "${filter.File_Name}"...`);
 
         let filterData = await Requests.getFilterData(filter.Filter_ID);
+        filtersData.push(filterData);
 
         Helpers.logMsg(
           `Finished getting data from jira for "${filter.File_Name}"...`
         );
+        Helpers.logMsg(`----------------------------`);
+      }
 
-        let filterDataArray = filterData
+      Helpers.logMsg(`-----------------------------------------------------`);
+
+      for (const [index, filter] of Conf.Filters.entries()) {
+        let filterDataArray = filtersData[index]
           .split("\n") // split string to lines
           .map((e) => e.trim()) // remove white spaces for each line
           .map((e) => e.split(",").map((e) => e.trim())); // split each line to array
@@ -76,12 +82,13 @@ dayjs.extend(utc);
         );
 
         Helpers.logMsg(`Data added successfully to "${filter.File_Name}"`);
-        Helpers.logMsg(`-----------------------------------------------------`);
+        Helpers.logMsg(`----------------------------`);
       }
 
       Helpers.logMsg(
         `Finished getting all new data, Updating after ${Conf.refresh_time_in_hours} hours ...`
       );
+      Helpers.logMsg(`-----------------------------------------------------`);
 
       await Helpers.sleep(Conf.refresh_time_in_hours * 60 * 60 * 1000);
     } catch (error) {
