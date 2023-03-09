@@ -94,7 +94,6 @@ dayjs.extend(utc);
       const synchronizeCommand = "onedrive --synchronize";
       const { stdout, stderr } = await exec(synchronizeCommand);
       if (stderr) throw new Error(stderr);
-      console.log(stdout);
 
       Helpers.logMsg(`Finished Synchronizing Drive files`);
       Helpers.logMsg(`----------------------------`);
